@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');          // Parses json
 const Redis = require('redis');                     // Interfaces with Redis
 const app = express();
 const port = 3000;
-const redisClient = Redis.createClient('redis://default:localhost:6379'); 
+const redisClient = Redis.createClient('redis://default:localhost:6379');
+const {createHash} = require('node:crypto');
 
 app.listen(port, ()=> {
     redisClient.connect();
@@ -25,11 +26,19 @@ app.post('/login', async (req,res) => {
     const loginBody = req.body;
     const userName = loginBody.userName;
     const password = loginBody.password;
-    const redisPassword = await redisClient.hGet('users', userName);
+    const hash = password == null ? null : createHash('sha3-256').update(password).digest('hex');
+    const redisPassword = await redisClient.hGet('credentials', userName);
     console.log("Password for " + userName + ": " + redisPassword)
-    if (redisPassword != null && password === redisPassword) {
+    if (redisPassword != null && hash === redisPassword) {
         res.send("Welcome " + userName);
     } else {
+        console.log(hash)
         res.send("Authentication failure: Incorrect password.");
     }
-})
+});
+
+// Hash generator: https://emn178.github.io/online-tools/sha3_256.html
+app.post('/hash', async (req, res) => {
+    console.log("Generating sha3-256 hash for: " + req.body.string);
+    res.send(req.body + " | " + req.body.string == null ? null : createHash('sha3-256').update(req.body.string).digest('hex'));
+});
