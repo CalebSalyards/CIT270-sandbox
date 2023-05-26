@@ -4,12 +4,14 @@ const Redis = require('redis');                     // Interfaces with Redis
 const app = express();
 const port = 3000;
 const redisClient = Redis.createClient('redis://default:localhost:6379');
+const https = require('https');
+const fs = require('fs');
 const {createHash} = require('node:crypto');
 
-app.listen(port, ()=> {
-    redisClient.connect();
-    console.log("Listening on port: " + port);
-});
+// app.listen(port, ()=> {
+//     redisClient.connect();
+//     console.log("Listening on port: " + port);
+// });
 
 app.get('/', (req, res) => {
     // res.send("<h1>Welcome to your Node Server!</h1>");
@@ -20,6 +22,13 @@ app.get('/', (req, res) => {
 
 // JSON stands for JavaScript Object Notation
 app.use(bodyParser.json());
+
+https.createServer({
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+    }, app).listen(3000, () => {
+    console.log('Listening...')
+});
 
 app.get('/login', (req,res) => {res.send("Login Page")})
 app.post('/login', async (req,res) => {
