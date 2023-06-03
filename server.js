@@ -24,8 +24,11 @@ app.get('/', (req, res) => {
 app.use(bodyParser.json());
 
 https.createServer({
-    key: fs.readFileSync('server.key'),
-    cert: fs.readFileSync('server.cert')
+    // key: fs.readFileSync('server.key'),
+    // cert: fs.readFileSync('server.cert')
+    key: fs.readFileSync('keys/privkey1.pem'),
+    cert: fs.readFileSync('keys/cert1.pem'),
+    chain: fs.readFileSync('keys/fullchain1.pem')
     }, app).listen(3000, () => {
     console.log('Listening...')
 });
