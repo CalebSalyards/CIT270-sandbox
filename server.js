@@ -29,7 +29,8 @@ https.createServer({
     key: fs.readFileSync('keys/privkey1.pem'),
     cert: fs.readFileSync('keys/cert1.pem'),
     chain: fs.readFileSync('keys/fullchain1.pem')
-    }, app).listen(3000, () => {
+}, app).listen(3000, () => {
+    redisClient.connect(); //  <------- ADD THIS LINE
     console.log('Listening...')
 });
 
