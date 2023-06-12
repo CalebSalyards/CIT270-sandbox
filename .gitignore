@@ -1,5 +1,4 @@
 node_modules/
 login.json
 keys/
-package-lock.json
 server.cert
