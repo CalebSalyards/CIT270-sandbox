@@ -2,7 +2,7 @@ const express = require('express');                 // Serves web content
 const bodyParser = require('body-parser');          // Parses json
 const Redis = require('redis');                     // Interfaces with Redis
 const app = express();
-const port = 3000;
+const port = 443;
 const redisClient = Redis.createClient('redis://default:localhost:6379');
 const https = require('https');
 const fs = require('fs');
@@ -14,22 +14,28 @@ const {createHash} = require('node:crypto');
 // });
 
 app.get('/', (req, res) => {
-    // res.send("<h1>Welcome to your Node Server!</h1>");
+    res.send("<h1>Welcome to your Node Server!</h1>");
     // OR
-    res.status(301);
-    res.redirect("https://youtu.be/dQw4w9WgXcQ?t=43s");
+    // res.status(301);
+    // res.redirect("https://youtu.be/dQw4w9WgXcQ?t=43s");
 });
 
 // JSON stands for JavaScript Object Notation
 app.use(bodyParser.json());
 
+var http = express();
+http.get('*', function(req, res) {  
+    res.redirect('https://' + req.headers.host + req.url);
+})
+
 https.createServer({
     // key: fs.readFileSync('server.key'),
     // cert: fs.readFileSync('server.cert')
-    key: fs.readFileSync('keys/privkey1.pem'),
-    cert: fs.readFileSync('keys/cert1.pem'),
-    chain: fs.readFileSync('keys/fullchain1.pem')
-}, app).listen(3000, () => {
+    key: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/privkey1.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/cert1.pem')
+    // chain: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/chain1.pem'),
+    // fullchain: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/fullchain1.pem')
+}, app).listen(port, () => {
     redisClient.connect(); //  <------- ADD THIS LINE
     console.log('Listening...')
 });
