@@ -24,7 +24,7 @@ spec:
 # name of container      
       - name: cit270-salyards-service
 # Docker image registry      
-        image: us-docker.pkg.dev/project-table-1/salyards-token-api
+        image: us-docker.pkg.dev/project-table-1/salyards-token-api/image:latest
 # First part of the command to start our API          
         command: ["npm"]
 # Parameters to add to the command        
