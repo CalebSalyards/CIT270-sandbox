@@ -61,7 +61,7 @@ metadata:
   name: stedi-salyards-certificate
 spec:
   domains:
-    - Name.cit270.com # this needs to be your domain name from DNS
+    - salyards.cit270.com # this needs to be your domain name from DNS
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
