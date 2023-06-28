@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
 # This is the name of my deployment
-  name: cit270salyardsservice
+  name: cit270-salyards-service
 # The specification for our deployment
 spec:
 # How many pods?
@@ -11,18 +11,18 @@ spec:
 # Used to identify the pod we want to talk to  
   selector:
     matchLabels:
-      app: cit270salyardsservice
+      app: cit270-salyards-service
 # Template to create containers
   template:
     metadata:
-      name: cit270salyardsservice
+      name: cit270-salyards-service
       labels:
-        app: cit270salyardsservice
+        app: cit270-salyards-service
 # specification for pod        
     spec:
       containers:
 # name of container      
-      - name: cit270salyardsservice
+      - name: cit270-salyards-service
 # Docker image registry      
         image: us-docker.pkg.dev/project-table-1/salyards-token-api
 # First part of the command to start our API          
@@ -46,10 +46,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: stedi-salyards-nodeport
+  name: service-salyards-nodeport
 spec:
   selector:
-    app: cit270salyardsservice # this needs to match the name of your deployment (line 6)
+    app: cit270-salyards-service # this needs to match the name of your deployment (line 6)
   type: NodePort
   ports:
     - port: 80
@@ -58,7 +58,7 @@ spec:
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: stedi-salyards-certificate
+  name: service-salyards-certificate
 spec:
   domains:
     - salyards.cit270.com # this needs to be your domain name from DNS
@@ -66,12 +66,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: stedi-salyards-ingress
+  name: service-salyards-ingress
   annotations:
   # Use this command to find the address name: gcloud compute addresses list 
-    kubernetes.io/ingress.global-static-ip-name: cit270salyards
+    kubernetes.io/ingress.global-static-ip-name: cit270-salyards
   # needs to match the name of the ManagedCertificate (line 75)
-    networking.gke.io/managed-certificates: stedi-salyards-certificate
+    networking.gke.io/managed-certificates: service-salyards-certificate
 spec:
   rules:
   - http:
@@ -81,6 +81,6 @@ spec:
         backend:
           service:
           # needs to match the name of the NodePort Service (line 63)
-            name: stedi-salyards-nodeport
+            name: service-salyards-nodeport
             port:
               number: 80
