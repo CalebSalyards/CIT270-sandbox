@@ -1,5 +1,7 @@
 FROM node:alpine
 
+ENV SERVICE_TYPE = "docker"
+
 WORKDIR /usr/app
 
 COPY package.json /usr/app/

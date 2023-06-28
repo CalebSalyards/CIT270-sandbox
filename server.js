@@ -8,10 +8,33 @@ const https = require('https');
 const fs = require('fs');
 const {createHash} = require('node:crypto');
 
-// app.listen(port, ()=> {
-//     redisClient.connect();
-//     console.log("Listening on port: " + port);
-// });
+if (process.env.SERVICE_TYPE == "docker") {
+    app.listen(port, ()=> {
+        redisClient.connect();
+        console.log("Listening on port: " + port);
+    });
+} else {
+    let privkey = ''
+    let certkey = ''
+    if (process.platform === "win32") {
+        privkey = './keys/privkey1.pem'
+        certkey = './keys/cert1.pem'
+    } else {
+        privkey = '/etc/letsencrypt/archive/salyards.cit270.com/privkey1.pem'
+        certkey = '/etc/letsencrypt/archive/salyards.cit270.com/cert1.pem'
+    }
+    https.createServer({
+        // key: fs.readFileSync('server.key'),
+        // cert: fs.readFileSync('server.cert')
+        key: fs.readFileSync(privkey),
+        cert: fs.readFileSync(certkey)
+        // chain: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/chain1.pem'),
+        // fullchain: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/fullchain1.pem')
+    }, app).listen(port, () => {
+        redisClient.connect(); //  <------- ADD THIS LINE
+        console.log('Listening...')
+    });
+}
 
 app.get('/', (req, res) => {
     res.send("<h1>Welcome to your Node Server!</h1>");
@@ -27,18 +50,6 @@ var http = express();
 http.get('*', function(req, res) {  
     res.redirect('https://' + req.headers.host + req.url);
 })
-
-https.createServer({
-    // key: fs.readFileSync('server.key'),
-    // cert: fs.readFileSync('server.cert')
-    key: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/privkey1.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/cert1.pem')
-    // chain: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/chain1.pem'),
-    // fullchain: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/fullchain1.pem')
-}, app).listen(port, () => {
-    redisClient.connect(); //  <------- ADD THIS LINE
-    console.log('Listening...')
-});
 
 app.get('/login', (req,res) => {res.send("Login Page")})
 app.post('/login', async (req,res) => {
