@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: redis-stedi-salyards
+  name: redis-salyards
 spec:
   selector:
     matchLabels:
-      app: redis-stedi-salyards  # has to match .spec.template.metadata.labels
-  serviceName: redis-stedi-salyards
+      app: redis-salyards  # has to match .spec.template.metadata.labels
+  serviceName: redis-salyards
   replicas: 1
   template:
     metadata:
       labels:
-        app: redis-stedi-salyards  # has to match .spec.selector.matchLabels
+        app: redis-salyards  # has to match .spec.selector.matchLabels
     spec:
       containers:
-        - name: redis-stedi-salyards
+        - name: redis-salyards
           image: redis:7.0.5-alpine
           imagePullPolicy: Always
           args: ["--requirepass", "$(REDIS_PASS)", "--appendonly", "yes", "--save", "900", "1", "--save", "30", "2"]
@@ -43,11 +43,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-stedi-salyards
+  name: redis-salyards
 spec:
   ports:
     - port: 6379
       name: redis
   clusterIP: None
   selector:
-    app: redis-stedi-salyards
+    app: redis-salyards
