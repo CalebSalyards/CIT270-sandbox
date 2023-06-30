@@ -58,7 +58,7 @@ spec:
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: service-salyards-certificate
+  name: kube-salyards-certificate
 spec:
   domains:
     - salyards.cit270.com # this needs to be your domain name from DNS
@@ -71,7 +71,7 @@ metadata:
   # Use this command to find the address name: gcloud compute addresses list 
     kubernetes.io/ingress.global-static-ip-name: cit270-salyards
   # needs to match the name of the ManagedCertificate (line 75)
-    networking.gke.io/managed-certificates: service-salyards-certificate
+    networking.gke.io/managed-certificates: kube-salyards-certificate
 spec:
   rules:
   - http:
