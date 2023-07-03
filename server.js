@@ -15,6 +15,7 @@ if (process.env.SERVICE_TYPE == "docker") {
         console.log("Listening on port: " + port);
     });
 } else {
+    console.log("Connecting to local Redis instance...")
     const redisClient = Redis.createClient('redis://default:localhost:6379');
     let privkey = ''
     let certkey = ''
