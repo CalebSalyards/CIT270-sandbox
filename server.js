@@ -8,8 +8,9 @@ const fs = require('fs');
 const {createHash} = require('node:crypto');
 
 if (process.env.SERVICE_TYPE == "docker") {
+    console.log("Docker image detected.")
+    const redisClient = Redis.createClient('redis://default:redis-salyards:6379');
     app.listen(port, ()=> {
-        const redisClient = Redis.createClient('redis://default:redis-salyards:6379');
         redisClient.connect();
         console.log("Listening on port: " + port);
     });
