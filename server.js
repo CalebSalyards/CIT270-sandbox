@@ -3,17 +3,18 @@ const bodyParser = require('body-parser');          // Parses json
 const Redis = require('redis');                     // Interfaces with Redis
 const app = express();
 const port = 443;
-const redisClient = Redis.createClient('redis://default:localhost:6379');
 const https = require('https');
 const fs = require('fs');
 const {createHash} = require('node:crypto');
 
 if (process.env.SERVICE_TYPE == "docker") {
     app.listen(port, ()=> {
+        const redisClient = Redis.createClient('redis://default:redis-salyards:6379');
         redisClient.connect();
         console.log("Listening on port: " + port);
     });
 } else {
+    const redisClient = Redis.createClient('redis://default:localhost:6379');
     let privkey = ''
     let certkey = ''
     if (process.platform === "win32") {

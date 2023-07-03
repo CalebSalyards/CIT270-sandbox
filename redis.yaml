@@ -17,16 +17,16 @@ spec:
         - name: redis-salyards
           image: redis:7.0.5-alpine
           imagePullPolicy: Always
-          args: ["--requirepass", "$(REDIS_PASS)", "--appendonly", "yes", "--save", "900", "1", "--save", "30", "2"]
+          args: ["--appendonly", "yes", "--save", "900", "1", "--save", "30", "2"]
           ports:
             - containerPort: 6379
               name: redis
-          env:
-          - name: REDIS_PASS
-            valueFrom:
-              secretKeyRef:
-                name: redis-secrets-salyards
-                key: REDIS_PASS
+          # env:
+          # - name: REDIS_PASS
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: redis-secrets-salyards
+          #       key: REDIS_PASS
           volumeMounts:
             - name: redis-salyards-volume
               mountPath: /data
