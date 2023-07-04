@@ -7,16 +7,17 @@ const https = require('https');
 const fs = require('fs');
 const {createHash} = require('node:crypto');
 
+let redisClient = "";
 if (process.env.SERVICE_TYPE == "docker") {
     console.log("Docker image detected.")
-    const redisClient = Redis.createClient('redis://default:redis-salyards:6379');
+    redisClient = Redis.createClient('redis://default:redis-salyards:6379');
     app.listen(port, ()=> {
         redisClient.connect();
         console.log("Listening on port: " + port);
     });
 } else {
     console.log("Connecting to local Redis instance...")
-    const redisClient = Redis.createClient('redis://default:localhost:6379');
+    redisClient = Redis.createClient('redis://default:localhost:6379');
     let privkey = ''
     let certkey = ''
     if (process.platform === "win32") {
