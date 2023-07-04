@@ -2,7 +2,7 @@ const express = require('express');                 // Serves web content
 const bodyParser = require('body-parser');          // Parses json
 const Redis = require('redis');                     // Interfaces with Redis
 const app = express();
-const port = 443;
+const port = 3000;
 const https = require('https');
 const fs = require('fs');
 const {createHash} = require('node:crypto');
@@ -42,7 +42,7 @@ if (process.env.SERVICE_TYPE == "docker") {
         // fullchain: fs.readFileSync('/etc/letsencrypt/archive/salyards.cit270.com/fullchain1.pem')
     }, app).listen(port, () => {
         redisClient.connect(); //  <------- ADD THIS LINE
-        console.log('Listening...')
+        console.log("Listening on port: " + port);
     });
 }
 
